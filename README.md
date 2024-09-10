@@ -9,6 +9,8 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node
 ### Testing Stage
 ```bash
 python evaluate.py
+python evaluate_test.py # Obtain multiple metrics
+python evaluate_test_get_audio_samlpes.py # Obtain audio samples
 ```
 
 # Dataset
