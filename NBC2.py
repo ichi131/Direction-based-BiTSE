@@ -274,16 +274,11 @@ class NBC2(nn.Module):
         # decoder
         self.decoder = nn.Linear(in_features=dim_hidden, out_features=output_size)
 
-    def forward(self, x: Tensor) -> Tensor:
-        # x: [Batch, Time, Feature]
-        # direc_x = self.encoder_direc1(direc_x.permute(0, 2, 1)).permute(0, 2, 1)
-        # # direc_x = self.encoder_direc2(direc_x.permute(0, 2, 1)).permute(0, 2, 1)
-        # direc_x = self.encoder_direc3(direc_x.permute(0, 2, 1)).permute(0, 2, 1)
-        # x = torch.cat([x, direc_x], dim=-1)
-        # B, F, TF, N = direction.shape
-        x = self.encoder(x.permute(0, 2, 1)).permute(0, 2, 1)#.reshape(B ,F, TF, N)
-        # x *= direction
-        # x = x.reshape(B*F, TF, N)
+    def forward(self, x: Tensor, direction: Tensor) -> Tensor:
+        B, F, TF, N = direction.shape
+        x = self.encoder(x.permute(0, 2, 1)).permute(0, 2, 1).reshape(B ,F, TF, N)
+        x *= direction
+        x = x.reshape(B*F, TF, N)
         # attns = []
         for m in self.sa_layers:
             x, attn = m(x)
