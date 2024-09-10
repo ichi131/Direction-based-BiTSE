@@ -5,10 +5,10 @@ This repository provides the implementation for the paper "Leveraging Boolean Di
 We utilized the dataset generation method described in https://github.com/huangzj421/BinauralWSJ0Mix.
 
 # BDE(Boolean Directivity Embedding) feature
-The BDE feature is extracted in NBSS.py
+The Boolean Directivity Embedding (BDE) feature is extracted using the `NBSS.py` script.
 
 # Spatiotemporal features
-The spatiotemporal features(CDF, SDF, delta STFT proposed in our previous work "A Study of Multichannel Spatiotemporal Features and Knowledge Distillation on Robust Target Speaker Extraction" https://ieeexplore.ieee.org/document/10446870) are extracted in spatial_fea.py
+In our previous work, "A Study of Multichannel Spatiotemporal Features and Knowledge Distillation on Robust Target Speaker Extraction" (available at https://ieeexplore.ieee.org/document/10446870), we proposed the spatiotemporal features CDF (Cosine directional function), SDF (Sine directional function), and ΔSTFT (delta Short-Time Fourier Transform). These features are extracted in the `spatial_fea.py` script.
 
 # Model
 For the backbone network, we used the NBC2 small available at https://github.com/audio-westlakeu/nbss.
