@@ -153,23 +153,14 @@ class NBSS(nn.Module):
         ys_hat = ys_hat.reshape(B, self.n_speaker, T)
         return ys_hat
 
-    def angle_to_onehot(self, angles):
-        """
-        Convert angles in degrees to one-hot encoded vectors.
-        Parameters:
-        - angles: A tensor of shape [batch size, 1] containing angles in degrees.
-        Returns:
-        - A tensor of shape [batch size, 360] with one-hot encoded angles.
-        """
-        # 创建一个全零one-hot编码张量
-        one_hot = torch.zeros(angles.size(0), 36).cuda(non_blocking=True)
-        
-        # 确保角度在0到360度之间，然后转换为整数索引
-        indices = torch.remainder(angles, 36).floor().long().cuda(non_blocking=True)
-        
-        # 使用scatter方法在正确的位置置1
-        one_hot.scatter_(1, indices, 1)
-        return one_hot
+    def angle_to_onehot(self, angle):
+        # Convert angles to indices in the range 0-35 using torch.div with rounding_mode='floor'
+        indices = torch.div(angle, 10, rounding_mode='floor') % 36
+        batch_size = angle.size(0)
+        one_hot_vectors = torch.zeros(batch_size, 36).cuda(non_blocking=True)
+        ＃ Usescatter to create one-hot encoding
+        one_hot_vectors.scatter_(1, indices.long(), 1)
+        return one_hot_vectors
 
 if __name__ == '__main__':
     x = torch.randn(size=(4, 2, 64000)).cuda(non_blocking=True)
