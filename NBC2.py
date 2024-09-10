@@ -263,9 +263,6 @@ class NBC2(nn.Module):
         super().__init__()
         # encoder
         self.encoder = nn.Conv1d(in_channels=input_size, out_channels=dim_hidden, kernel_size=encoder_kernel_size, stride=1, padding="same")
-        # self.encoder_direc1 = nn.Conv1d(in_channels=int(input_size/2*3), out_channels=96, kernel_size=encoder_kernel_size, stride=1, padding="same")
-        # self.encoder_direc2 = nn.Conv1d(in_channels=96, out_channels=96, kernel_size=encoder_kernel_size, stride=1, padding="same")
-        # self.encoder_direc3 = nn.Conv1d(in_channels=96, out_channels=int(input_size/2), kernel_size=encoder_kernel_size, stride=1, padding="same")
         # self-attention net
         self.sa_layers = nn.ModuleList()
         for l in range(n_layers):
