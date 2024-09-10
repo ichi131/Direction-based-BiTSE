@@ -2,9 +2,15 @@
 This repository provides the implementation for the paper "Leveraging Boolean Directivity Embedding for Binaural Target Speaker Extraction" by Yichi Wang, Jie Zhang, Chengqian Jiang, Weitai Zhang, Zhongyi Ye, Lirong Dai.
 
 # How to use:
-training stage: CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 train.py --save_folder exp/save_model
+### Training Stage
+```bash
+CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 train.py --save_folder exp/save_model
+```
+### Testing Stage
+```bash
+python evaluate.py
+```
 
-testing stage: python evaluate.py
 # Dataset
 We utilized the dataset generation method described in https://github.com/huangzj421/BinauralWSJ0Mix.
 
