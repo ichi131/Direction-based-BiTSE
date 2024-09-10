@@ -9,3 +9,9 @@ For the backbone network, we used the NBC2 small available at https://github.com
 
 # Spatiotemporal features
 The spatiotemporal features are extracted in spatial_fea.py
+
+#  Paradigm of the proposed BiTSE
+![Alt text](images/framework.png)
+
+# Results 
+![Alt text](images/result.png)
