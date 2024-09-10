@@ -14,4 +14,5 @@ The spatiotemporal features are extracted in spatial_fea.py
 ![Alt text](images/framework.png)
 
 # Results 
-![Alt text](images/result.png)
+![Alt text](images/table1.png)
+![Alt text](images/table2.png)
