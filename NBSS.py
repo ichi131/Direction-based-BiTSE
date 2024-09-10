@@ -55,14 +55,14 @@ class NBSS(nn.Module):
         self.n_speaker = n_speaker
         self.doa_input_shape = doa_input_shape
         # Define layers
-        # self.theta_linear = nn.Linear(self.doa_input_shape, 96)  # DOA linear layer
-        # self.fi_linear = nn.Linear(self.doa_input_shape, 96)  # DOA linear layer
-        # self.layer_norm = torch.nn.LayerNorm(96)
-        # self.direction_linear = nn.Linear(96, 96)
-        # self.theta_conv = nn.Conv2d(in_channels=36, out_channels=96, kernel_size=(1, 1))
-        # self.fi_conv = nn.Conv2d(in_channels=36, out_channels=96, kernel_size=(1, 1))
-        # self.layer_norm = torch.nn.LayerNorm(96)
-        # self.direction_linear = nn.Linear(96, 96)
+        self.theta_linear = nn.Linear(self.doa_input_shape, 96)  # DOA linear layer
+        self.fi_linear = nn.Linear(self.doa_input_shape, 96)  # DOA linear layer
+        self.layer_norm = torch.nn.LayerNorm(96)
+        self.direction_linear = nn.Linear(96, 96)
+        self.theta_conv = nn.Conv2d(in_channels=36, out_channels=96, kernel_size=(1, 1))
+        self.fi_conv = nn.Conv2d(in_channels=36, out_channels=96, kernel_size=(1, 1))
+        self.layer_norm = torch.nn.LayerNorm(96)
+        self.direction_linear = nn.Linear(96, 96)
 
     def forward(self, x: Tensor, angle_tgt_theta: Tensor, angle_tgt_fi: Tensor) -> Tensor:
         """forward
@@ -96,37 +96,31 @@ class NBSS(nn.Module):
         X = torch.view_as_real(X)  # [B, F, T, C, 2]
         X = X.reshape(B * F, TF, C * 2)
 
-        # angle_tgt_theta_expand = theta_input.unsqueeze(1).expand(B, TF, 36).unsqueeze(1)  # 新的形状将会是 [B, 1, TF, 36]
+        angle_tgt_theta_expand = theta_input.unsqueeze(1).expand(B, TF, 36).unsqueeze(1)  # 新的形状将会是 [B, 1, TF, 36]
 
-        # # 创建一个乘法因子向量，根据 F 的大小
-        # factors_theta = torch.arange(1, F+1, dtype=torch.float32, device=theta_input.device).view(1, F, 1, 1)
+        # 创建一个乘法因子向量，根据 F 的大小
+        factors_theta = torch.arange(1, F+1, dtype=torch.float32, device=theta_input.device).view(1, F, 1, 1)
 
-        # # 将 x_expanded 与 factors 相乘以生成新的维度
-        # angle_tgt_theta_new = angle_tgt_theta_expand * factors_theta  # 结果形状为 [B, F, TF, 36]
+        # 将 x_expanded 与 factors 相乘以生成新的维度
+        angle_tgt_theta_new = angle_tgt_theta_expand * factors_theta  # 结果形状为 [B, F, TF, 36]
 
-        # angle_tgt_fi_expand = fi_input.unsqueeze(1).expand(B, TF, 36).unsqueeze(1)  # 新的形状将会是 [B, 1, TF, 36]
+        angle_tgt_fi_expand = fi_input.unsqueeze(1).expand(B, TF, 36).unsqueeze(1)  # 新的形状将会是 [B, 1, TF, 36]
 
-        # # 创建一个乘法因子向量，根据 F 的大小
-        # factors_fi = torch.arange(1, F+1, dtype=torch.float32, device=fi_input.device).view(1, F, 1, 1)
+        # 创建一个乘法因子向量，根据 F 的大小
+        factors_fi = torch.arange(1, F+1, dtype=torch.float32, device=fi_input.device).view(1, F, 1, 1)
 
-        # # 将 x_expanded 与 factors 相乘以生成新的维度
-        # angle_tgt_fi_new = angle_tgt_fi_expand * factors_fi  # 结果形状为 [B, F, TF, 36]
+        # 将 x_expanded 与 factors 相乘以生成新的维度
+        angle_tgt_fi_new = angle_tgt_fi_expand * factors_fi  # 结果形状为 [B, F, TF, 36]
         
-        # # Process DOA input through conv layer
-        # theta_output = self.theta_conv(angle_tgt_theta_new.permute(0, 3, 1, 2).contiguous()).permute(0, 2, 3, 1).contiguous()
-        # fi_output = self.fi_conv(angle_tgt_fi_new.permute(0, 3, 1, 2).contiguous()).permute(0, 2, 3, 1).contiguous()
+        # Process DOA input through conv layer
+        theta_output = self.theta_conv(angle_tgt_theta_new.permute(0, 3, 1, 2).contiguous()).permute(0, 2, 3, 1).contiguous()
+        fi_output = self.fi_conv(angle_tgt_fi_new.permute(0, 3, 1, 2).contiguous()).permute(0, 2, 3, 1).contiguous()
 
-        # added_vector = theta_output + fi_output
-        # # Compute the norm of the resulting vector
-        # direction = self.layer_norm(added_vector)
-        # direction = self.direction_linear(direction)
-
-        # print("X", X.size())
-        # print("IPD", ipd_feature.size())
-        # X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature, complex_diff, SCM_list], dim=-1).float()
-        # X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature, complex_diff], dim=-1).float()
-        # X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature], dim=-1).float()
-        # X = torch.cat([X, DF_all_spk_norm, ipd_feature, complex_diff], dim=-1).float()
+        added_vector = theta_output + fi_output
+        # Compute the norm of the resulting vector
+        direction = self.layer_norm(added_vector)
+        direction = self.direction_linear(direction)
+        
         if X.size(1) != DF_all_spk_norm.size(1):
             min_dim = min(DF_all_spk_norm.size(1), X.size(1))
             X = X[:, :min_dim, :]
@@ -136,13 +130,13 @@ class NBSS(nn.Module):
             complex_diff = complex_diff[:, :min_dim, :]
             # print(X.size(), DF_all_spk_norm.size())
 
-        # X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature, complex_diff], dim=-1).float()
+        X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature, complex_diff], dim=-1).float()
         # X = torch.cat([X, DF_all_spk_norm, df_new, ipd_feature], dim=-1).float()
         # X = torch.cat([X, DF_all_spk_norm, ipd_feature, complex_diff], dim=-1).float()
         # X = torch.cat([X, DF_all_spk_norm, ipd_feature], dim=-1).float()
         X = torch.cat([X, DF_all_spk_norm], dim=-1).float()
         # network processing
-        output = self.arch(X)
+        output = self.arch(X, direction)
 
         # to complex
         output = output.reshape(B, F, TF, self.n_speaker, 2)
