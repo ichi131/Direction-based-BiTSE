@@ -1,6 +1,24 @@
 # Direction-based-BiTSE
 This repository provides the implementation for the paper "Leveraging Boolean Directivity Embedding for Binaural Target Speaker Extraction" by Yichi Wang, Jie Zhang, Chengqian Jiang, Weitai Zhang, Zhongyi Ye, Lirong Dai.
 
+## Dependencies
+
+This project requires the following packages with specified versions:
+
+- **Python**: 3.9.15
+- **PyTorch**: 1.10.2+cu113
+- **TorchAudio**: 0.10.2+cu113
+- **TorchMetrics**: 0.11.4
+- **SoundFile**: 0.12.1
+
+### Installation
+
+To install these dependencies, you can use `pip` to install them directly. Here is a command that includes all the required packages:
+
+```bash
+pip install torch==1.10.2+cu113 torchaudio==0.10.2+cu113 torchmetrics==0.11.4 soundfile==0.12.1
+```
+
 # How to use:
 ### Training Stage
 ```bash
