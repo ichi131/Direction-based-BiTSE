@@ -78,8 +78,8 @@ class NBSS(nn.Module):
         # DF_all_spk_norm, ipd_feature, log_mag = get_spatial_fea(x, angle_tgt_theta, angle_tgt_fi)
         # STFT
         B, C, T = x.shape
-        # theta_input = self.angle_to_onehot(angle_tgt_theta)
-        # fi_input = self.angle_to_onehot(angle_tgt_fi)
+        theta_input = self.angle_to_onehot(angle_tgt_theta)
+        fi_input = self.angle_to_onehot(angle_tgt_fi)
 
         x = x.reshape((B * C, T))
         X = torch.stft(x, n_fft=self.n_fft, hop_length=self.n_overlap, window=self.window, win_length=self.n_fft, return_complex=True)
