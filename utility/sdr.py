@@ -1,3 +1,6 @@
+"""
+@author: audio-westlakeu
+"""
 import numpy as np
 from itertools import permutations
 from torch.autograd import Variable
