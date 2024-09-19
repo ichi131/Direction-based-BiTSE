@@ -1,3 +1,6 @@
+"""
+@author: audio-westlakeu
+"""
 import math
 from typing import Callable, Optional, Tuple
 
